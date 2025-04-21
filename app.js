@@ -11,6 +11,7 @@ const express               =  require('express'),
       User                  =  require("./models/user")
       mongoSanitize        =  require("express-mongo-sanitize"),
       rateLimit            =  require("express-rate-limit"),
+      xss                  =  require("xss-clean"),
 
 //Connecting database
 mongoose.connect("mongodb://localhost/auth_demo");
@@ -50,6 +51,10 @@ const limit = rateLimit({
     message: "Too many requests"
 });
 app.use('/routeName', limit);
+
+app.use(express.json({ limit: '10kb' })); // Limit request body size to 10kb
+
+app.use(xss()); // Sanitize user input to prevent XSS attacks
 
 //=======================
 //      R O U T E S
