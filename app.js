@@ -82,18 +82,32 @@ app.get("/register",(req,res)=>{
     res.render("register");
 });
 
-app.post("/register",(req,res)=>{
-    
-    User.register(new User({username: req.body.username,email: req.body.email,phone: req.body.phone}),req.body.password,function(err,user){
-        if(err){
+
+app.post("/register", (req, res) => {
+    const { username, password, email, phone } = req.body;
+
+    const usernameRegex = /^[a-zA-Z0-9_]{5,15}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    // Validate username and password on the server-side
+    if (!usernameRegex.test(username)) {
+        return res.render("register", { error: "Invalid username format. Must be 5-15 characters, alphanumeric or underscore." });
+    }
+    if (!passwordRegex.test(password)) {
+        return res.render("register", { error: "Password too weak. Must be at least 8 characters, include uppercase, lowercase, number, and special character." });
+    }
+
+    User.register(new User({ username, email, phone }), password, function (err, user) {
+        if (err) {
             console.log(err);
-            res.render("register");
+            return res.render("register", { error: "User registration failed." });
         }
-        passport.authenticate("local")(req,res,function(){
+        passport.authenticate("local")(req, res, function () {
             res.redirect("/login");
-        })    
-    })
-})
+        });
+    });
+});
+
 app.get("/logout",(req,res)=>{
     req.logout();
     res.redirect("/");

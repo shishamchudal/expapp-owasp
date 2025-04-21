@@ -1,18 +1,50 @@
 <%- include('header'); %>
 <%- include('nav'); %>
 <main>
-<h3>
-    Sign Up
-</h3>
-<form action="/register" method="POST">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username">
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password">
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email">
-    <label for="phone">Phone</label>
-    <input type="text" name="phone" id="phone">
-    <button class="btn btn-success">Submit</button>
-</form>
+    <h3>Sign Up</h3>
+
+    <!-- Display Error Message -->
+    <% if (typeof error !== 'undefined') { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/register" method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email">
+        
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" id="phone">
+        
+        <button class="btn btn-success">Submit</button>
+    </form>
+
+    <!-- Client-Side Validation Script -->
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const errorMsg = document.getElementById("errorMsg");
+
+            const usernameRegex = /^[a-zA-Z0-9_]{5,15}$/;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+            if (!usernameRegex.test(username)) {
+                e.preventDefault();
+                errorMsg.textContent = "Username must be 5-15 characters and contain only letters, numbers, or underscores.";
+                return;
+            }
+
+            if (!passwordRegex.test(password)) {
+                e.preventDefault();
+                errorMsg.textContent = "Password must be at least 8 characters long, include uppercase, lowercase, a number, and a special character.";
+                return;
+            }
+        });
+    </script>
 </main>
