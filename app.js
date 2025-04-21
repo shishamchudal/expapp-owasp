@@ -1,4 +1,5 @@
 const { default: rateLimit } = require('express-rate-limit');
+const { default: helmet } = require('helmet');
 
 const express               =  require('express'),
       expSession            =  require("express-session"),
@@ -12,6 +13,7 @@ const express               =  require('express'),
       mongoSanitize        =  require("express-mongo-sanitize"),
       rateLimit            =  require("express-rate-limit"),
       xss                  =  require("xss-clean"),
+      helmet               =  require("helmet"),
 
 //Connecting database
 mongoose.connect("mongodb://localhost/auth_demo");
@@ -55,6 +57,8 @@ app.use('/routeName', limit);
 app.use(express.json({ limit: '10kb' })); // Limit request body size to 10kb
 
 app.use(xss()); // Sanitize user input to prevent XSS attacks
+
+app.use(helmet()); // Set security HTTP headers
 
 //=======================
 //      R O U T E S
