@@ -14,7 +14,12 @@ mongoose.connect("mongodb://localhost/auth_demo");
 app.use(expSession({
     secret:"mysecret",       //decode or encode session
     resave: false,          
-    saveUninitialized:false
+    saveUninitialized:false,
+    cookie: {
+        httpOnly:true,
+        secure:false,
+        maxAge: 1 * 60 * 1000 // 10 minutes
+    }
 }))
 
 passport.serializeUser(User.serializeUser());       //session encoding
