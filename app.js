@@ -7,6 +7,7 @@ const express               =  require('express'),
       LocalStrategy         =  require("passport-local"),
       passportLocalMongoose =  require("passport-local-mongoose"),
       User                  =  require("./models/user")
+      mongoSanitize        =  require("express-mongo-sanitize"),
 
 //Connecting database
 mongoose.connect("mongodb://localhost/auth_demo");
