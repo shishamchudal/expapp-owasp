@@ -1,3 +1,5 @@
+const { default: rateLimit } = require('express-rate-limit');
+
 const express               =  require('express'),
       expSession            =  require("express-session"),
       app                   =  express(),
@@ -8,6 +10,7 @@ const express               =  require('express'),
       passportLocalMongoose =  require("passport-local-mongoose"),
       User                  =  require("./models/user")
       mongoSanitize        =  require("express-mongo-sanitize"),
+      rateLimit            =  require("express-rate-limit"),
 
 //Connecting database
 mongoose.connect("mongodb://localhost/auth_demo");
@@ -40,6 +43,13 @@ app.use(express.static("public"));
 //=======================
 
 app.use(mongoSanitize());
+
+const limit = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: "Too many requests"
+});
+app.use('/routeName', limit);
 
 //=======================
 //      R O U T E S
