@@ -39,7 +39,7 @@ app.use(express.static("public"));
 //      O W A S P
 //=======================
 
-
+app.use(mongoSanitize());
 
 //=======================
 //      R O U T E S
